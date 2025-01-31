@@ -20,6 +20,6 @@ export interface SpotifyStream {
     offline: boolean | null;
     offline_timestamp: number | null;
     incognito_mode: boolean | null;
-  }
+}
   
   

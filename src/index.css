@@ -3,17 +3,17 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-spotify-dark text-white font-sans m-0 antialiased;
-  }
+    body {
+        @apply bg-spotify-dark text-white font-sans m-0 antialiased;
+    }
 
-  code {
-    @apply font-mono;
-  }
+    code {
+        @apply font-mono;
+    }
 }
 
 @layer components {
-  .btn-default {
-    @apply px-4 py-2 rounded-xl text-center text-white
-  }
+    .btn-default {
+        @apply px-4 py-2 rounded-xl text-center text-white
+    }
 }

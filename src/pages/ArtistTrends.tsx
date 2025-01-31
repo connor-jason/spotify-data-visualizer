@@ -1,44 +1,38 @@
-import React, { useMemo } from 'react';
-import { useDataContext } from '../DataContext';
+import React from 'react';
+import { useDataContext } from '../contexts/DataContext';
 import { SpotifyStream } from '../types/SpotifyData';
-import TopArtistsChart from '../charts/TopArtistCharts';
+import TopArtistsChart from '../charts/TopArtistsCharts';
 
 const ArtistTrends: React.FC = () => {
-  const { streams } = useDataContext();
+    const { streams } = useDataContext();
 
-  // Count total plays per artist
-  const topArtists = useMemo(() => {
-    const artistMap: Record<string, number> = {};
+    // Count total plays per artist
+    const topArtists = React.useMemo(() => {
+        const artistMap: Record<string, number> = {};
 
-    streams.forEach((stream: SpotifyStream) => {
-      if (stream.master_metadata_album_artist_name) {
-        const artist = stream.master_metadata_album_artist_name;
-        // If artist not in map, initialize to 0 then increment by 1
-        if (!artistMap[artist]) {
-          artistMap[artist] = 0;
-        }
-        artistMap[artist]++;
-      }
-    });
+        streams.forEach((s: SpotifyStream) => {
+            const artist = s.master_metadata_album_artist_name;
+            if (artist) {
+                artistMap[artist] = (artistMap[artist] || 0) + 1;
+            }
+        });
 
-    // Convert to array and sort
-    const arr = Object.entries(artistMap).map(([artist, count]) => ({ artist, count }));
-    arr.sort((a, b) => b.count - a.count); // Sort by count descending
+        const arr = Object.entries(artistMap).map(([artist, count]) => ({ artist, count }));
+        arr.sort((a, b) => b.count - a.count);
+        return arr.slice(0, 10);
+    }, [streams]);
 
-    // Take top 10 for the chart
-    return arr.slice(0, 10);
-  }, [streams]);
+    return (
+        <div className="px-4 py-6">
+            <h1 className="text-3xl text-center text-spotify-green font-bold mb-6">Top Artists</h1>
 
-  return (
-    <div>
-      <h2 className="text-2xl mb-4 text-spotify-green text-center font-bold">Top Artists</h2>
-      {topArtists.length > 0 ? (
-        <TopArtistsChart data={topArtists} />
-      ) : (
-        <p className="text-spotify-lightGray">No JSON data found. Please upload your files on the home page.</p>
-      )}
-    </div>
-  );
+            {topArtists.length > 0 ? (
+                <TopArtistsChart data={topArtists} />
+            ) : (
+                <p className="text-spotify-lightGray text-center">No data found.</p>
+            )}
+        </div>
+    );
 };
 
 export default ArtistTrends;
